@@ -93,7 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -108,7 +108,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = 'assets'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'bc_site/frontend')
+    os.path.join(BASE_DIR, 'bc_site/frontend'),
 )
 
 # Default primary key field type
