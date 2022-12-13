@@ -14,7 +14,7 @@ class Customer(models.Model):
         return f'{self.firstname} {self.lastname}'
 
 
-class Question(models.Model):
+class Request(models.Model):
     customer = models.ForeignKey(
         'Customer',
         verbose_name='Клиент',
@@ -23,21 +23,9 @@ class Question(models.Model):
     )
     question = models.TextField('Вопрос')
     
-    answer = models.TextField('Ответ', blank=True)
-
-    who_answered = models.ForeignKey(
-        'salons.Staff',
-        verbose_name='Кто ответил',
-        related_name='answered_questions',
-        on_delete=models.PROTECT,
-        blank=True
-    )
-
     asked_at = models.DateTimeField('Вопрос задан', auto_now_add=True, editable=False)
 
-    answered_at = models.DateTimeField('Ответили', blank=True)
-
-
+    
 class Feedback(models.Model):
     customer = models.ForeignKey(
         'Customer',

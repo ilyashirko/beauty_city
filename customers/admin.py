@@ -5,7 +5,7 @@ from customers import models as customers_models
 class CustomerAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(customers_models.Question)
+@admin.register(customers_models.Request)
 class QuestionAdmin(admin.ModelAdmin):
     pass
 
