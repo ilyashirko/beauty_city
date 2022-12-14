@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bc_site',
     'salons',
-    'customers'
+    'customers',
 ]
 
 MIDDLEWARE = [
