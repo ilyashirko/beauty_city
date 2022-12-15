@@ -32,7 +32,7 @@ class SocialNetwork(models.Model):
     link = models.URLField('Ссылка')
 
 
-class Schedule(models.Model):
+class SalonSchedule(models.Model):
     WEEK_DAYS = (
         ('monday', 'Понедельник'),
         ('tuesday', 'Вторник'),
