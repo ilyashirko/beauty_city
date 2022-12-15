@@ -83,7 +83,7 @@
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
 						<button class="header__block_btn">Перезвоните мне</button>
-						{% if user.is_authenticated %}
+						{% if user.username %}
 							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
 							{% if user.is_staff %}
 								<a class="header__block_auth__intro" href="{% url 'admin_page' %}">Администратор</a>
