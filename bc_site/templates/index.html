@@ -84,7 +84,7 @@
 						<a href="tel:+79179023800"><button class="header__block_btn">Перезвоните мне</button></a>
 						{% if user.is_authenticated %}
 							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
-							<a class="header__block_auth__intro" href="{% url 'lk' %}">{{ user.username }}</a>	
+							<a class="header__block_auth__intro" href="{% url 'notes' %}">{{ user.username }}</a>	
 						{% else %}
 							<div class="header__block_auth">
 								<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
@@ -114,7 +114,7 @@
 									довольных клиентов
 								</p>
 							</div>
-							<a href="service.html"><button class="banner__btn">Записаться</button></a>
+							<a href="{% url 'service' %}"><button class="banner__btn">Записаться</button></a>
 						</div>
 					</div>
 					<div class="col-md-12 col-lg-5">

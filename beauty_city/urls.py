@@ -22,5 +22,6 @@ from bc_site import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='start_page'),
-    # path('lk/', views.notes, name='lk')
+    path('notes/', views.notes, name='notes'),
+    path('service/', views.service, name='service')
 ]
