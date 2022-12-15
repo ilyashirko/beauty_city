@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import date, datetime
 from phonenumber_field.modelfields import PhoneNumberField
 
 WEEK_DAYS = (
@@ -64,9 +64,21 @@ class Procedure(models.Model):
     title = models.CharField('Название', max_length=200)
     image = models.ImageField('Изображение', upload_to='media/services')
     price = models.SmallIntegerField('Стоимость')
+    specialization = models.ForeignKey(
+        'Specialization',
+        verbose_name='Специализация',
+        related_name='procedures',
+        on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return self.title
+
+    def find_masters_on_salon(self, salon: Salon):
+        return Master.objects.filter(
+            specialization=self.specialization,
+            schedule__salon=salon
+        )
 
 class Staff(models.Model):
     firstname = models.CharField('Имя', max_length=200)

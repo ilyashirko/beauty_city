@@ -26,3 +26,19 @@ class StaffAdmin(admin.ModelAdmin):
 @admin.register(salons_models.Master)
 class MasterAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(salons_models.Specialization)
+class SpecializationAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(salons_models.SocialNetwork)
+class SocialNetworkAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(salons_models.MasterSchedule)
+class MasterScheduleAdmin(admin.ModelAdmin):
+    pass
+
