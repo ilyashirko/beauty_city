@@ -9,7 +9,8 @@ class Salon(models.Model):
     image = models.ImageField('Изображение', upload_to='media/salons')
     
     phonenumber = PhoneNumberField('Телефон')
-    
+    email = models.EmailField('Почта', null=True)
+
     procedures = models.ManyToManyField(
         'Procedure',
         verbose_name='Procedures',
@@ -18,6 +19,17 @@ class Salon(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.address})'
+
+class SocialNetwork(models.Model):
+    salon = models.ForeignKey(
+        'Salon',
+        verbose_name='Salon',
+        related_name='social_networks',
+        on_delete=models.CASCADE
+    )
+    title = models.CharField('Название', max_length=200)
+    image = models.ImageField('Иконка', upload_to='media/icons')
+    link = models.URLField('Ссылка')
 
 
 class Schedule(models.Model):
