@@ -15,3 +15,10 @@ def service(request):
 
     return render(request, 'service.html')
 
+
+def admin_page(request):
+    return render(request, 'admin.html')
+
+
+def service_finally(request):
+    return render(request, 'serviceFinally.html')

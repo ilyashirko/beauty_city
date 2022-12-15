@@ -83,10 +83,19 @@
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
 						<button class="header__block_btn">Перезвоните мне</button>
-						<div class="header__block_auth">
+						{% if user.is_authenticated %}
 							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
-							<span class="header__block_auth__intro">Войти</span>
-						</div>
+							{% if user.is_staff %}
+								<a class="header__block_auth__intro" href="{% url 'admin_page' %}">Администратор</a>
+							{% else %}
+								<a class="header__block_auth__intro" href="{% url 'notes' %}">{{ user.username }}</a>
+							{% endif %}		
+						{% else %}
+							<div class="header__block_auth">
+								<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
+								<span class="header__block_auth__intro">Войти</span>
+							</div>
+						{% endif %}
 					</div>
 					</div>
 				</div>
@@ -108,12 +117,6 @@
 				</div>
 				
 				<form action="#" class="service__form">
-					<!-- <select name="selectSalon" id="" class="service__form_select">
-						<option value="" selected>(Выберите салон)</option>
-						<option value="salon1" >Салон 1</option>
-						<option value="salon2" >Салон 2</option>
-						<option value="salon3" >Салон 3</option>
-					</select> -->
 					<div class="service__form_block service__salons">
 						<button class="accordion">(Выберите салон)</button>
 						<div class="panel">
@@ -172,12 +175,6 @@
 								  </div>
 							  
 							</div>
-						 <!--  <div class="accordion__block">
-						  	<div class="accordion__block_intro">Парикмахерские услуги</div>
-						  </div>
-						  <div class="accordion__block">
-						  	<div class="accordion__block_intro">Ногтевой сервис</div>
-						  </div> -->
 						  <button class="accordion">Макияж</button>
 						  <div class="panel">
 
@@ -258,8 +255,8 @@
 				<div class="time__btns">
 					<div class="row">
 						<div class="col-md-12">
-							<button  class="time__btns_next">Далее</button>
-							<button  class="time__btns_home">На главную</button>
+							<a href="{% url 'service_finally' %}"><button  class="time__btns_next">Далее</button></a>
+							<a href="{% url 'start_page' %}"><button  class="time__btns_home">На главную</button></a>
 						</div>
 					</div>
 				</div>
