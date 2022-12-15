@@ -20,17 +20,19 @@ def index(request):
 
             if request.POST['num1'] == login_code['num1'] and request.POST['num2'] == login_code['num2'] and request.POST['num3'] == login_code['num3'] and request.POST['num4'] == login_code['num4']:
                 request.user.username = telephone
+
+                customer = Customer.objects.get_or_create(
+                    firstname = 'Имя',
+                    phonenumber = telephone)
+
                 return render(request, 'notes.html')
             else:
+                telephone = ''
                 return render(request, 'wrongLoginCode.html')
         else:
             phone_number = phonenumbers.parse(request.POST['tel'])
 
             if phonenumbers.is_possible_number(phone_number):
-                # customer = Customer.get_or_create(
-                #     phonenumber = request.POST['tel']
-                # )
-
                 telephone = request.POST['tel']
 
                 context = {
