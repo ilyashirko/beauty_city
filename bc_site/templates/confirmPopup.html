@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <div class="confirmPopup popup">
+        <div class="popup__title confirmPopup__title">Подтвердите номер</div>
+        <p class="popup__text confirmPopup__text">Введите код, полученный по SMS на номер {{ tel }}</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="confirmPopup__number">
+                <input type="text" name="num1" class="tipsPopup__form_inputNum popup__input" placeholder="" required>
+                <input type="text" name="num2" class="tipsPopup__form_inputNum popup__input" placeholder="" required>
+                <input type="text" name="num3" class="tipsPopup__form_inputNum popup__input" placeholder="" required>
+                <input type="text" name="num4" class="tipsPopup__form_inputNum popup__input" placeholder="" required>
+            </div>
+            <div>
+                <a href="{% url 'notes' %}"><button  class="time__btns_home">Подтвердить</button></a>
+            </div>
+        </form>
+        <div class="confirmPopup__sms">Если SMS не пришло вы можете <a href="#" class="popup__link">запросить код повторно</a></div>
+        <div class="confirmPopup__changeNumber">
+            <a href="{% url 'start_page' %}" class="confirmPopup__link popup__link">Изменить номер телефона</a>
+        </div>
+    </div>
+</body>
+</html>
