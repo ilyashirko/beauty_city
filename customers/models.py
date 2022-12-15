@@ -21,7 +21,7 @@ class Request(models.Model):
         related_name='questions',
         on_delete=models.PROTECT
     )
-    question = models.TextField('Вопрос')
+    question = models.TextField('Вопрос', blank=True)
     
     asked_at = models.DateTimeField('Вопрос задан', auto_now_add=True, editable=False)
 

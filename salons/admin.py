@@ -4,11 +4,12 @@ from salons import models as salons_models
 
 @admin.register(salons_models.Salon)
 class SalonAdmin(admin.ModelAdmin):
-    pass
+    raw_id_fields = ('procedures',)
+    list_display = ('social_networks', 'schedule')
 
 
-@admin.register(salons_models.Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
+@admin.register(salons_models.SalonSchedule)
+class SalonScheduleAdmin(admin.ModelAdmin):
     pass
 
 
@@ -25,3 +26,19 @@ class StaffAdmin(admin.ModelAdmin):
 @admin.register(salons_models.Master)
 class MasterAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(salons_models.Specialization)
+class SpecializationAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(salons_models.SocialNetwork)
+class SocialNetworkAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(salons_models.MasterSchedule)
+class MasterScheduleAdmin(admin.ModelAdmin):
+    pass
+
