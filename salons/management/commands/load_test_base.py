@@ -88,23 +88,7 @@ class Command(BaseCommand):
             is_administrator=True,
             image=image
         )
-        NAMES = ("Ольга", "Мария", "Алевтина", "Инна", "Инга", "Анастасия", "Наталья")
-        LASTNAMES = ("Иванова", "Петрова", "Краснова", "Романова")
-
-        for i in range(10):
-            salons_models.Master.objects.get_or_create(
-                firstname=random.choice(NAMES),
-                lastname=random.choice(LASTNAMES),
-                phonenumber=f'+7911{random.randint(1000000, 9999999)}',
-                started_working_at=datetime.date(
-                    year=random.randint(2000, 2022),
-                    month=random.randint(1, 12),
-                    day=random.randint(1, 28)
-                ),
-                image=image,
-                specialization=random.choice(specialization_objects)
-            )
-
+        
         SALONS = (
             {
                 'title': 'Salon1',
@@ -125,17 +109,72 @@ class Command(BaseCommand):
                 'email': 'salon3@email.ru'
             },
         )
+        salons_objects = list()
         for salon in SALONS:
             salon_object, created = salons_models.Salon.objects.get_or_create(
                 title=salon['title'],
                 address=salon['address'],
                 image=image,
                 phonenumber=salon['phonenumber'],
-                email=salon['phonenumber']
+                email=salon['email']
             )
-
+            salons_objects.append(salon_object)
             if not created:
                 procedures = random.choices(procedures_objects, k=5)
                 for procedure in procedures:
                     salon_object.procedures.add(procedure)
                     salon_object.save()
+        
+        NAMES = ("Ольга", "Мария", "Алевтина", "Инна", "Инга", "Анастасия", "Наталья")
+        LASTNAMES = ("Иванова", "Петрова", "Краснова", "Романова")
+
+        for i in range(10):
+            master, _ = salons_models.Master.objects.get_or_create(
+                firstname=random.choice(NAMES),
+                lastname=random.choice(LASTNAMES),
+                phonenumber=f'+7911{random.randint(1000000, 9999999)}',
+                started_working_at=datetime.date(
+                    year=random.randint(2000, 2022),
+                    month=random.randint(1, 12),
+                    day=random.randint(1, 28)
+                ),
+                image=image,
+                specialization=random.choice(specialization_objects)
+            )
+            for num, _ in salons_models.WEEK_DAYS:
+                is_free = random.choice((None, 1))
+                if is_free:
+                    start=datetime.time(hour=10, minute=0, second=0)
+                    finish=datetime.time(hour=22, minute=0, second=0)
+                else:
+                    start, finish = None, None
+                salons_models.MasterSchedule.objects.get_or_create(
+                    salon=random.choice(salons_objects),
+                    master=master,
+                    week_day=num,
+                    start_at=start,
+                    finish_at=finish
+                )
+
+        SOCIALS = {
+            'vk': 'https://vk.com',
+            'google': 'https://google.com',
+            'yandex': 'https://ya.ru'
+        }
+
+        for salon in salons_objects:
+            for social, url in SOCIALS.items():
+                salons_models.SocialNetwork.objects.get_or_create(
+                    salon=salon,
+                    title=social,
+                    image=image,
+                    link=url
+                )
+
+            for num, _ in salons_models.WEEK_DAYS:
+                salons_models.SalonSchedule.objects.get_or_create(
+                    salon=salon,
+                    week_day=num,
+                    open=datetime.time(hour=10, minute=0, second=0),
+                    close=datetime.time(hour=22, minute=0, second=0)
+                )

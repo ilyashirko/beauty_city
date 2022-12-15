@@ -3,13 +3,13 @@ from datetime import date, datetime
 from phonenumber_field.modelfields import PhoneNumberField
 
 WEEK_DAYS = (
-        ('monday', 'Понедельник'),
-        ('tuesday', 'Вторник'),
-        ('wednesday', 'Среда'),
-        ('thursday', 'Четверг'),
-        ('friday', 'Пятница'),
-        ('saturday', 'Суббота'),
-        ('sunday', 'Воскресенье'),
+        (1, 'Понедельник'),
+        (2, 'Вторник'),
+        (3, 'Среда'),
+        (4, 'Четверг'),
+        (5, 'Пятница'),
+        (6, 'Суббота'),
+        (7, 'Воскресенье'),
     )
 
 
@@ -131,8 +131,8 @@ class MasterSchedule(models.Model):
         on_delete=models.CASCADE
     )
     week_day = models.CharField('День недели', max_length=30, choices=WEEK_DAYS)
-    start_at = models.TimeField('Начинает работу в')
-    finish_at = models.TimeField('Заканчивает работу в')
+    start_at = models.TimeField('Начинает работу в', null=True)
+    finish_at = models.TimeField('Заканчивает работу в', null=True)
 
     def __str__(self):
         return f'{self.salon} ({self.week_day}): {self.open} - {self.close}'

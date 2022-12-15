@@ -5,7 +5,7 @@ from salons import models as salons_models
 @admin.register(salons_models.Salon)
 class SalonAdmin(admin.ModelAdmin):
     raw_id_fields = ('procedures',)
-    list_display = ('social_networks', 'schedule')
+    
 
 
 @admin.register(salons_models.SalonSchedule)
