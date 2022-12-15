@@ -2,6 +2,16 @@ from django.db import models
 from datetime import date
 from phonenumber_field.modelfields import PhoneNumberField
 
+WEEK_DAYS = (
+        ('monday', 'Понедельник'),
+        ('tuesday', 'Вторник'),
+        ('wednesday', 'Среда'),
+        ('thursday', 'Четверг'),
+        ('friday', 'Пятница'),
+        ('saturday', 'Суббота'),
+        ('sunday', 'Воскресенье'),
+    )
+
 
 class Salon(models.Model):
     title = models.CharField('Название', max_length=200)
@@ -20,6 +30,9 @@ class Salon(models.Model):
     def __str__(self):
         return f'{self.title} ({self.address})'
 
+    def get_procedures(self):
+        return self.procedures.all()
+
 class SocialNetwork(models.Model):
     salon = models.ForeignKey(
         'Salon',
@@ -33,16 +46,6 @@ class SocialNetwork(models.Model):
 
 
 class SalonSchedule(models.Model):
-    WEEK_DAYS = (
-        ('monday', 'Понедельник'),
-        ('tuesday', 'Вторник'),
-        ('wednesday', 'Среда'),
-        ('thursday', 'Четверг'),
-        ('friday', 'Пятница'),
-        ('saturday', 'Суббота'),
-        ('sunday', 'Воскресенье'),
-    )
-
     salon = models.ForeignKey(
         'Salon',
         verbose_name='Salon',
@@ -79,8 +82,17 @@ class Staff(models.Model):
     image = models.ImageField('Изображение', upload_to='media/masters')
 
 
-class Master(Staff):
+class Specialization(models.Model):
     specialization = models.CharField('Специализация', max_length=200)
+
+
+class Master(Staff):
+    specialization = models.ForeignKey(
+        'Specialization',
+        verbose_name='Специализация',
+        related_name='masters',
+        on_delete=models.PROTECT
+    )
 
     def get_experience(self) -> tuple[int, int, int]:
         experience = date.today() - self.started_working_at
@@ -92,3 +104,23 @@ class Master(Staff):
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
     
+
+class MasterSchedule(models.Model):
+    salon = models.ForeignKey(
+        'Salon',
+        verbose_name='Salon',
+        related_name='master_schedule',
+        on_delete=models.CASCADE
+    )
+    master = models.ForeignKey(
+        'Master',
+        verbose_name='Master',
+        related_name='schedule',
+        on_delete=models.CASCADE
+    )
+    week_day = models.CharField('День недели', max_length=30, choices=WEEK_DAYS)
+    start_at = models.TimeField('Начинает работу в')
+    finish_at = models.TimeField('Заканчивает работу в')
+
+    def __str__(self):
+        return f'{self.salon} ({self.week_day}): {self.open} - {self.close}'
