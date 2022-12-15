@@ -141,75 +141,41 @@ $(document).ready(function() {
 	    	 panel.addClass('active')
 	  });
 	}
-
+	
+	
 
 	$(document).on('click', '.accordion__block', function(e) {
+		var jsonData = JSON.parse(document.querySelector('#jsonData').getAttribute('data-json'));
 		let thisName,thisAddress;
 
 		thisName = $(this).find('> .accordion__block_intro').text()
 		thisAddress = $(this).find('> .accordion__block_address').text()
 		
-		
+		var html = ``;
+		for (var person in jsonData) {
+			var temp = `<div class="accordion__block fic">
+							<div class="accordion__block_elems fic">
+								<img style="width: 30px" src="` + jsonData[person]['image'] + `" alt="avatar" class="accordion__block_img">
+								<div class="accordion__block_master">` + jsonData[person]['name'] + `</div>
+							</div>
+							<div class="accordion__block_prof">` + jsonData[person]['specialization'] + `</div>
+						</div>`
+			html += temp
+			
+			
+		  }
+
 		if(thisName === 'BeautyCity Пушкинская') {
-			$('.service__masters > .panel').html(`
-				<div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/all.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Любой мастер</div>
-						  	</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/1.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Елизавета Лапина</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Мастер маникюра</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/2.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Анна Сергеева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Парикмахер</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/3.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Ева Колесова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/4.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Мария Суворова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Стилист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/5.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Мария Максимова</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>
-						  <div class="accordion__block fic">
-						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/pushkinskaya/6.svg' %}" alt="avatar" class="accordion__block_img">
-							  	<div class="accordion__block_master">Анастасия Сергеева</div>
-						  	</div>
-						  	<div class="accordion__block_prof">Визажист</div>
-						  </div>	
-			`)
-			// $('.service__masters div[data-masters="Pushkinskaya"]').addClass('vib')
-		}
+			$('.service__masters > .panel').html(html)}
+
+		
 		console.log(thisName)
 		if(thisName === 'BeautyCity Ленина') {
 			
 			$('.service__masters > .panel').html(`
 				<div class="accordion__block fic">
 						  	<div class="accordion__block_elems fic">
-							  	<img src="{% static 'img/masters/avatar/all.svg' %}" alt="avatar" class="accordion__block_img">
+							  	<img  src="{% static 'img/masters/avatar/all.svg' %}" alt="avatar" class="accordion__block_img">
 							  	<div class="accordion__block_master">Любой мастер</div>
 						  	</div>
 						  </div>

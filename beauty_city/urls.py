@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import render
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from bc_site import views
 
@@ -27,3 +29,4 @@ urlpatterns = [
     path('admin_page/', views.admin_page, name='admin_page'),
     path('service_finally/', views.service_finally, name='service_finally')
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

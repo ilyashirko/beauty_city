@@ -105,6 +105,12 @@
 			</div>
 		</div>
 	</header>
+
+
+	
+	<div style="display: none" id="jsonData" data-json="{{ data }}"></div>
+	{{ data|json_script:"masters" }}
+
 	<section id="service">
 		<div class="container">
 			<div class="service">
@@ -118,10 +124,10 @@
 				
 				<form action="#" class="service__form">
 					<div class="service__form_block service__salons">
-						<button class="accordion">(Выберите салон)</button>
+						<button class="accordion" type="submit">(Выберите салон)</button>
 						<div class="panel">
 						  <div class="accordion__block fic">
-						  	<div class="accordion__block_intro">BeautyCity Пушкинская</div>
+						  	<div class="accordion__block_intro" >BeautyCity Пушкинская</div>
 						  	<div class="accordion__block_address">ул. Пушкинская, д. 78А</div>
 						  </div>
 						  <div class="accordion__block fic">

@@ -2,6 +2,8 @@ import phonenumbers
 
 from django.contrib.auth.models import User
 from django.shortcuts import render
+from salons import models as salons_models
+import json
 
 from customers.models import Customer 
 
@@ -70,7 +72,26 @@ def service(request):
     if telephone:
         request.user.username = telephone
 
-    return render(request, 'service.html')
+    data = json.dumps(
+        [
+            {
+                'name': f'{master.firstname} {master.lastname}',
+                'image': master.image.url,
+                'specialization': master.specialization.specialization,
+            } 
+            for master in salons_models.Master.objects.all()
+        ]
+    )
+    print([
+            {
+                'name': f'{master.firstname} {master.lastname}',
+                'image': master.image.url,
+                'specialization': master.specialization.specialization
+            } 
+            for master in salons_models.Master.objects.all()
+        ])
+    context = {'data': data}
+    return render(request, 'service.html', context)
 
 
 def admin_page(request):

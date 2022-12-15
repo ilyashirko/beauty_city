@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Customer(models.Model):
     firstname = models.CharField('Имя', max_length=200)
-    lastname = models.CharField('Фамилия', max_length=200)
+    lastname = models.CharField('Фамилия', max_length=200, blank=True)
     patronymic = models.CharField('Отчество', max_length=200, blank=True)
 
     phonenumber = PhoneNumberField('Телефон')
