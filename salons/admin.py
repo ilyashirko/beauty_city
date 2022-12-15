@@ -8,8 +8,8 @@ class SalonAdmin(admin.ModelAdmin):
     list_display = ('social_networks', 'schedule')
 
 
-@admin.register(salons_models.Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
+@admin.register(salons_models.SalonSchedule)
+class SalonScheduleAdmin(admin.ModelAdmin):
     pass
 
 
