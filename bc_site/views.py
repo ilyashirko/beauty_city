@@ -5,9 +5,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
 from salons import models as salons_models
 import json
-
+from hashlib import md5
 from customers.models import Customer 
-
+from salons.models import Staff
 
 has_code_request = False
 telephone = ''
