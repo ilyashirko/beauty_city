@@ -59,8 +59,6 @@ def index(request):
                     'num4': telephone[11],
                 }
 
-                print(telephone)
-
                 telephone = request.POST['tel']
 
                 context = {
