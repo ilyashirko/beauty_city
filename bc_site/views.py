@@ -1,11 +1,13 @@
 import phonenumbers
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
 from salons import models as salons_models
 import json
 
 from customers.models import Customer
+from salons.models import Staff
 
 
 has_code_request = False
@@ -21,11 +23,22 @@ def index(request):
             if request.POST['num1'] == login_code['num1'] and request.POST['num2'] == login_code['num2'] and request.POST['num3'] == login_code['num3'] and request.POST['num4'] == login_code['num4']:
                 request.user.username = telephone
 
-                customer = Customer.objects.get_or_create(
-                    firstname = 'Имя',
-                    phonenumber = telephone)
+                try:
+                    staff = Staff.objects.get(
+                        phonenumber = telephone
+                    )
 
-                return render(request, 'notes.html')
+                    if staff.is_administrator:
+                        return render(request, 'admin.html')
+                    else:
+                        return render(request, 'notes.html')
+                except ObjectDoesNotExist:
+                    customer = Customer.objects.get_or_create(
+                        firstname = 'Имя',
+                        phonenumber = telephone
+                    )
+
+                    return render(request, 'notes.html')
             else:
                 telephone = ''
                 return render(request, 'wrongLoginCode.html')
@@ -34,16 +47,24 @@ def index(request):
 
             if phonenumbers.is_possible_number(phone_number):
                 telephone = request.POST['tel']
+                telephone = telephone.replace(" ", "")
+                telephone = telephone.replace("-", "")
+                telephone = telephone.replace("(", "")
+                telephone = telephone.replace(")", "")
+
+                login_code = {
+                    'num1': telephone[8],
+                    'num2': telephone[9],
+                    'num3': telephone[10],
+                    'num4': telephone[11],
+                }
+
+                print(telephone)
+
+                telephone = request.POST['tel']
 
                 context = {
                    'tel': request.POST['tel']
-                }
-
-                login_code = {
-                    'num1': request.POST['tel'][13],
-                    'num2': request.POST['tel'][14],
-                    'num3': request.POST['tel'][16],
-                    'num4': request.POST['tel'][17],
                 }
 
                 has_code_request = True
@@ -57,7 +78,24 @@ def index(request):
         if telephone:
             request.user.username = telephone
 
-        return render(request, 'index.html')
+            try:
+                staff = Staff.objects.get(
+                    phonenumber = telephone
+                )
+
+                context = {
+                    'is_staff': staff.is_administrator
+                }
+
+                return render(request, 'index.html', context)
+            except ObjectDoesNotExist:
+                return render(request, 'index.html')
+        else:
+            context = {
+                'is_staff': False
+            }
+        
+            return render(request, 'index.html')
 
 
 def notes(request):
@@ -73,6 +111,8 @@ def service(request):
 
     if telephone:
         request.user.username = telephone
+    else:
+        return render(request, 'notLogged.html')
 
     data = json.dumps(
         [
