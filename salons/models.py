@@ -31,7 +31,12 @@ class Salon(models.Model):
         return f'{self.title} ({self.address})'
 
     def get_procedures(self):
-        return self.procedures.all()
+        procedures = self.procedures.all()
+        all_specs = set(proc.specialization for proc in procedures)
+        result = dict()
+        for spec in all_specs:
+            result[spec] = [procedure for procedure in procedures if procedure.specialization == spec]
+        return result
 
 class SocialNetwork(models.Model):
     salon = models.ForeignKey(

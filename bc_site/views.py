@@ -6,8 +6,7 @@ from django.shortcuts import redirect, render
 from salons import models as salons_models
 import json
 
-from customers.models import Customer
-from salons.models import Staff
+from customers.models import Customer 
 
 
 has_code_request = False
@@ -112,7 +111,33 @@ def service(request):
     else:
         return render(request, 'notLogged.html')
 
-    data = json.dumps(
+    context = dict()
+    context['salons'] = [
+        {
+            'title': salon.title,
+            'address': salon.address
+        }
+        for salon in salons_models.Salon.objects.all()
+    ]
+
+
+    context['json_salons'] = dict()
+    for salon in salons_models.Salon.objects.all():
+        all_procedures = dict()
+        for specialization, procedures in salon.get_procedures().items():
+            all_procedures[specialization.specialization] = [
+                {'title': procedure.title, 'price': procedure.price}
+                for procedure in procedures
+            ]
+        context['json_salons'][salon.title] = {
+            'address': salon.address,
+            'procedures': all_procedures
+        }       
+    print(context['json_salons'])     
+    context['json_salons'] = json.dumps(context['json_salons'])
+    print(context['json_salons'])
+    
+    context['data'] = json.dumps(
         [
             {
                 'name': f'{master.firstname} {master.lastname}',
@@ -122,15 +147,21 @@ def service(request):
             for master in salons_models.Master.objects.all()
         ]
     )
-    print([
-            {
-                'name': f'{master.firstname} {master.lastname}',
-                'image': master.image.url,
-                'specialization': master.specialization.specialization
-            } 
-            for master in salons_models.Master.objects.all()
-        ])
-    context = {'data': data}
+    context['specializations'] = [
+            {"hash": md5(bytes(specialization.specialization, 'utf-8')).hexdigest(),
+            "value": specialization.specialization}
+            for specialization in salons_models.Specialization.objects.all()
+    ]
+
+    context['json_specializations'] = json.dumps(
+        [
+            {"hash": md5(bytes(specialization.specialization, 'utf-8')).hexdigest(),
+            "value": specialization.specialization}
+            for specialization in salons_models.Specialization.objects.all()
+        ]
+    )
+    
+
     return render(request, 'service.html', context)
 
 

@@ -1,6 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from datetime import datetime
 
 
 class Customer(models.Model):
@@ -12,6 +13,41 @@ class Customer(models.Model):
     
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
+
+    # def get_actual_orders(self):
+    #     return self.orders.filter('datetime__gt'=datetime.now())
+
+
+class Order(models.Model):
+    customer = models.ForeignKey(
+        'Customer',
+        verbose_name='Клиент',
+        related_name='orders',
+        on_delete=models.PROTECT
+    )
+    salon = models.ForeignKey(
+        'salons.Salon',
+        verbose_name='Салон',
+        related_name='orders',
+        on_delete=models.PROTECT,
+    )
+    procedure = models.ForeignKey(
+        'salons.Procedure',
+        verbose_name='Салон',
+        related_name='orders',
+        on_delete=models.PROTECT,
+        blank=True
+    )
+    master = models.ForeignKey(
+        'salons.Master',
+        verbose_name='Мастер',
+        related_name='orders',
+        on_delete=models.PROTECT,
+        blank=True
+    )
+    datetime = models.DateTimeField(
+        'Время записи'
+    )
 
 
 class Request(models.Model):

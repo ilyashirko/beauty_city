@@ -131,7 +131,7 @@ $(document).ready(function() {
 	var i;
 
 	for (i = 0; i < acc.length; i++) {
-		console.log('accordeon click')
+		acc[i].style.background = 'red';	
 	  acc[i].addEventListener("click", function(e) {
 	  	e.preventDefault()
 	    this.classList.toggle("active");
@@ -140,98 +140,65 @@ $(document).ready(function() {
 	    	 panel.removeClass('active')
 	    	: 
 	    	 panel.addClass('active')
+			 panel.addClass('WOW')
 	  });
 	}
 
+	
 
 	$(document).on('click', '.accordion__block', function(e) {
-		let thisName,thisAddress;
-		console.log('accordion__block click')
-		thisName = $(this).find('> .accordion__block_intro').text()
-		thisAddress = $(this).find('> .accordion__block_address').text()
 		var jsonData = JSON.parse(document.querySelector('#jsonData').getAttribute('data-json'));
 		var salons = JSON.parse(document.querySelector('#json_salons').getAttribute('data-json'));
-		var specializations = JSON.parse(document.querySelector('#specializations').getAttribute('data-json'));
-		var salons_titles = Object.keys(salons)
-		console.log(specializations)
-		for (i in salons_titles) {
-			if (thisName === salons_titles[i]) {
-				var html = `<div class="accordion__block fic">
-								<div class="accordion__block_elems fic">
-									<img src="img/masters/avatar/all.svg" alt="avatar" class="accordion__block_img">
-									<div class="accordion__block_master">Любой мастер</div>
-								</div>
-							</div>`;
-				for (var person in jsonData) {
-					var temp = `<div class="accordion__block fic">
-									<div class="accordion__block_elems fic">
-										<img style="width: 30px" src="` + jsonData[person]['image'] + `" alt="avatar" class="accordion__block_img">
-										<div class="accordion__block_master">` + jsonData[person]['name'] + `</div>
-									</div>
-									<div class="accordion__block_prof">` + jsonData[person]['specialization'] + `</div>
-								</div>`
-					html += temp
-					
-					
-				}
-				$('.service__masters > .panel').html(html)
-				
+		let thisName,thisAddress;
 
-				var all_spec_html = ``
-				for (var spec in specializations) {
-					var current_spec = specializations[spec]['value']
-					var html = `<div class="accordion__block_items">`
-					var current_procesdures = salons[thisName]['procedures'][current_spec]
-					for (var i in current_procesdures) {
-						console.log(current_procesdures[i])
-						var temp = `<div class="accordion__block_item fic">
-										<div class="accordion__block_item_intro">` + current_procesdures[i]['title'] + `</div>
-										<div class="accordion__block_item_address">` + current_procesdures[i]['price'] + ` ₽</div>
-									</div>`
-						html += temp
-					html += `</div>`
-					}
-					$('.' + specializations[spec]['hash']).html(html)
-					
-				}
-				$('.accordion__block_item').click(function(e) {
-					let thisName,thisAddress;
-					thisName = $(this).find('> .accordion__block_item_intro').text()
-					thisAddress = $(this).find('> .accordion__block_item_address').text()
-					$(this).parent().parent().parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-					// $(this).parent().parent().parent().parent().find('> button.active').click()
-					// $(this).parent().parent().parent().addClass('hide')
-					setTimeout(() => {
-						$(this).parent().parent().parent().parent().find('> button.active').click()
-					}, 200)
-				})
+		thisName = $(this).find('> .accordion__block_intro').text()
+		thisAddress = $(this).find('> .accordion__block_address').text()
 
-				
-				// var specializations = salons[thisName]['procedures']
-				// var all_spec_html = ``
-				// for (var spec in specializations) {
-				// 	var spec_html = `<button class="accordion">` + spec + `</button>
-				// 						<div class="panel"><div class="accordion__block_items">
-				// 						`
-				// 	var procedures = salons[thisName]['procedures'][spec]
-				// 	for (var procedure in procedures) {
-				// 			var temp = `<div class="accordion__block_item fic">
-				// 							<div class="accordion__block_item_intro">` + procedures[procedure]['title'] + `</div>
-				// 							<div class="accordion__block_item_address">` + procedures[procedure]['price'] + ` ₽</div>
-				// 						</div>`
-				// 			spec_html += temp
-				// 	}										
-				// 	spec_html += `</div></div>`
-				// 	all_spec_html += spec_html
-				// }
-				// $('.service__specializations > .panel').html(all_spec_html)
-			}
+		// var specializations = salons[thisName]['procedures']
+		// var all_spec_html = ``
+		// for (var spec in specializations) {
+		// 	var spec_html = `<button class="accordion">` + spec + `</button>
+		// 						<div class="panel"><div class="accordion__block_items">
+		// 						`
+		// 	var procedures = salons[thisName]['procedures'][spec]
+		// 	for (var procedure in procedures) {
+		// 	 	var temp = `<div class="accordion__block_item fic">
+		// 	 					<div class="accordion__block_item_intro">` + procedures[procedure]['title'] + `</div>
+		// 	 					<div class="accordion__block_item_address">` + procedures[procedure]['price'] + ` ₽</div>
+		// 	 				</div>`
+		// 	 	spec_html += temp
+		// 	}										
+		// 	spec_html += `</div></div>`
+		// 	all_spec_html += spec_html
+		// }
+		// $('.service__services > .panel').html(all_spec_html)
+		
+
+		var html = ``;
+		for (var person in jsonData) {
+			var temp = `<div class="accordion__block fic">
+		 					<div class="accordion__block_elems fic">
+		 						<img style="width: 30px" src="` + jsonData[person]['image'] + `" alt="avatar" class="accordion__block_img">
+		 						<div class="accordion__block_master">` + jsonData[person]['name'] + `</div>
+		 					</div>
+		 					<div class="accordion__block_prof">` + jsonData[person]['specialization'] + `</div>
+		 				</div>`
+		 	html += temp
+			
+			
 		}
+		$('.service__masters > .panel').html(html)
+
+		
+		
 
 		$(this).parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
 		setTimeout(() => {
 			$(this).parent().parent().find('> button.active').click()
 		}, 200)
+		
+
+
 		
 		// $(this).parent().addClass('hide')
 
@@ -241,7 +208,24 @@ $(document).ready(function() {
 	})
 
 
-	
+	$('.accordion__block_item').click(function(e) {
+		let thisName,thisAddress;
+		thisName = $(this).find('> .accordion__block_item_intro').text()
+		thisAddress = $(this).find('> .accordion__block_item_address').text()
+		$(this).parent().parent().parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
+		// $(this).parent().parent().parent().parent().find('> button.active').click()
+		// $(this).parent().parent().parent().addClass('hide')
+		setTimeout(() => {
+			$(this).parent().parent().parent().parent().find('> button.active').click()
+		}, 200)
+	})
+
+
+
+	// 	console.log($('.service__masters > .panel').attr('data-masters'))
+	// if($('.service__salons .accordion.selected').text() === "BeautyCity Пушкинская  ул. Пушкинская, д. 78А") {
+	// }
+
 
 	$(document).on('click', '.service__masters .accordion__block', function(e) {
 		let clone = $(this).clone()
