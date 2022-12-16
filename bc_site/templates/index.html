@@ -84,11 +84,7 @@
 						<a href="tel:+79179023800"><button class="header__block_btn">Перезвоните мне</button></a>
 						{% if user.username %}
 							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
-							{% if user.is_staff %}
-								<a class="header__block_auth__intro" href="{% url 'admin_page' %}">Администратор</a>
-							{% else %}
-								<a class="header__block_auth__intro" href="{% url 'notes' %}">{{ user.username }}</a>
-							{% endif %}	
+							<a class="header__block_auth__intro" href="{% url 'notes' %}">{{ user.username }}</a>	
 						{% else %}
 							<div class="header__block_auth">
 								<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">

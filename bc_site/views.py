@@ -1,11 +1,11 @@
 import phonenumbers
 
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from salons import models as salons_models
 import json
 
-from customers.models import Customer 
+from customers.models import Customer
 
 
 has_code_request = False
@@ -105,3 +105,12 @@ def service_finally(request):
         request.user.username = telephone
 
     return render(request, 'serviceFinally.html')
+
+
+def exit(request):
+    global telephone
+
+    telephone = ''
+    request.user.username = telephone
+
+    return redirect('start_page')

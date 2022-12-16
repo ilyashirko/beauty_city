@@ -27,6 +27,7 @@ urlpatterns = [
     path('notes/', views.notes, name='notes'),
     path('service/', views.service, name='service'),
     path('admin_page/', views.admin_page, name='admin_page'),
-    path('service_finally/', views.service_finally, name='service_finally')
+    path('service_finally/', views.service_finally, name='service_finally'),
+    path('exit/', views.exit, name='exit')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
