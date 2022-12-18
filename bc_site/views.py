@@ -1,4 +1,5 @@
 import phonenumbers
+from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -6,7 +7,7 @@ from django.shortcuts import redirect, render
 from salons import models as salons_models
 import json
 from hashlib import md5
-from customers.models import Customer 
+from customers.models import Customer
 from salons.models import Staff
 
 has_code_request = False
@@ -30,14 +31,30 @@ def index(request):
                     if staff.is_administrator:
                         return render(request, 'admin.html')
                     else:
-                        return render(request, 'notes.html')
-                except ObjectDoesNotExist:
-                    customer = Customer.objects.get_or_create(
-                        firstname = 'Имя',
-                        phonenumber = telephone
-                    )
+                        customer = Customer.objects.get_or_create(
+                            firstname = staff.firstname,
+                            lastname = staff.lastname,
+                            phonenumber = telephone
+                        )
 
-                    return render(request, 'notes.html')
+                        context = get_customers_orders(telephone)
+
+                        return render(request, 'notes.html', context)
+                except ObjectDoesNotExist:
+                    try:
+                        customer = Customer.objects.get(
+                            phonenumber = telephone
+                        )
+                    except ObjectDoesNotExist:
+                        customer = Customer.objects.get_or_create(
+                            firstname = 'Имя',
+                            phonenumber = telephone
+                        )
+
+                    context = get_customers_orders(telephone)
+                    print(context)
+
+                    return render(request, 'notes.html', context)
             else:
                 telephone = ''
                 return render(request, 'wrongLoginCode.html')
@@ -99,7 +116,9 @@ def notes(request):
     if telephone:
         request.user.username = telephone
 
-    return render(request, 'notes.html')
+    context = get_customers_orders(telephone)
+
+    return render(request, 'notes.html', context)
 
 
 def service(request):
@@ -183,3 +202,70 @@ def exit(request):
     request.user.username = telephone
 
     return redirect('start_page')
+
+
+def get_customers_orders(phonenumber):
+    current_orders = []
+    past_orders = []
+
+    if phonenumber:
+        customer = Customer.objects.get(
+            phonenumber = phonenumber
+        )
+
+        orders = customer.orders.all()
+
+        for order in orders:
+            now = datetime.now(timezone.utc)
+
+            order_params = {
+                'salon_title': order.salon.title,
+                'salon_address': order.salon.address,
+                'procedure': order.procedure.title,
+                'price': order.procedure.price,
+                'master_firstname': order.master.firstname,
+                'master_lastname': order.master.lastname,
+                'order_hour': order.datetime.hour + 3,
+                'order_minute': order.datetime.minute,
+                'order_day': order.datetime.day
+            }
+
+            if order.datetime.month == 1:
+                order_params['order_month'] = 'января'
+            elif order.datetime.month == 2:
+                order_params['order_month'] = 'февраля'
+            elif order.datetime.month == 3:
+                order_params['order_month'] = 'марта'
+            elif order.datetime.month == 4:
+                order_params['order_month'] = 'апреля'
+            elif order.datetime.month == 5:
+                order_params['order_month'] = 'мая'
+            elif order.datetime.month == 6:
+                order_params['order_month'] = 'июня'
+            elif order.datetime.month == 7:
+                order_params['order_month'] = 'июля'
+            elif order.datetime.month == 8:
+                order_params['order_month'] = 'августа'
+            elif order.datetime.month == 9:
+                order_params['order_month'] = 'сентября'
+            elif order.datetime.month == 10:
+                order_params['order_month'] = 'октября'
+            elif order.datetime.month == 11:
+                order_params['order_month'] = 'ноября'
+            elif order.datetime.month == 12:
+                order_params['order_month'] = 'декабря'
+
+            if order.datetime.minute == 0:
+                order_params['order_minute'] = '00'
+
+            if order.datetime > now:
+                current_orders.append(order_params)
+            elif order.datetime < now:
+                past_orders.append(order_params)
+
+    context = {
+        'current_orders': current_orders,
+        'past_orders': past_orders
+    }
+
+    return context
