@@ -94,3 +94,13 @@ class Feedback(models.Model):
         auto_now_add=True,
         editable=False
     )
+
+class Payment(models.Model):
+
+    order = models.ForeignKey(
+        'Order',
+        verbose_name='Заказ',
+        related_name='payments',
+        on_delete=models.PROTECT
+    )
+    value = models.SmallIntegerField('Стоимость')
