@@ -280,8 +280,6 @@ def get_customers_orders(phonenumber):
         'past_orders': past_orders
     }
 
-    print(context)
-
     return context
 
 
