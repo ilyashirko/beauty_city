@@ -129,8 +129,9 @@ def service(request):
     print('GET', request.GET)
     print('POST', request.POST)
 
-    if telephone:
-        request.user.username = telephone
+    if request.user.username:
+        if telephone:
+            request.user.username = telephone
     else:
         return render(request, 'notLogged.html')
 
