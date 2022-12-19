@@ -12,3 +12,11 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(customers_models.Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(customers_models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(customers_models.Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    pass

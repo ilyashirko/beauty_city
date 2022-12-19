@@ -14,9 +14,6 @@ class Customer(models.Model):
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
 
-    # def get_actual_orders(self):
-    #     return self.orders.filter('datetime__gt'=datetime.now())
-
 
 class Order(models.Model):
     customer = models.ForeignKey(
@@ -61,6 +58,8 @@ class Request(models.Model):
     
     asked_at = models.DateTimeField('Вопрос задан', auto_now_add=True, editable=False)
 
+    def __str__(self):
+        return f'Вопрос от клиента {self.customer}.'
     
 class Feedback(models.Model):
     customer = models.ForeignKey(
@@ -95,6 +94,9 @@ class Feedback(models.Model):
         editable=False
     )
 
+    def __str__(self):
+        return f'{self.customer}: score = {self.score}'
+
 class Payment(models.Model):
 
     order = models.ForeignKey(
@@ -104,3 +106,12 @@ class Payment(models.Model):
         on_delete=models.PROTECT
     )
     value = models.SmallIntegerField('Стоимость')
+    
+    created_at = models.DateTimeField(
+        'created at',
+        auto_now_add=True,
+        editable=False
+    )
+
+    def __str__(self):
+        return f'{self.order} ({self.value} от {self.created_at})'
