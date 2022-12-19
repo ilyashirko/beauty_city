@@ -1,13 +1,17 @@
+import json
 import phonenumbers
 from datetime import datetime, timezone
+from hashlib import md5
 
+import stripe
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
+from django.urls import reverse
+
+from customers.models import Customer, Order, Payment
 from salons import models as salons_models
-import json
-from hashlib import md5
-from customers.models import Customer
 from salons.models import Staff
 
 has_code_request = False
@@ -219,7 +223,7 @@ def get_customers_orders(phonenumber):
             now = datetime.now(timezone.utc)
 
             order_params = {
-                'salon_title': order.salon.title,
+                'id': order.id,
                 'salon_address': order.salon.address,
                 'procedure': order.procedure.title,
                 'price': order.procedure.price,
@@ -259,6 +263,13 @@ def get_customers_orders(phonenumber):
                 order_params['order_minute'] = '00'
 
             if order.datetime > now:
+                try:
+                    payment = Payment.objects.get(order=order)
+
+                    order_params['is_paid'] = True
+                except ObjectDoesNotExist:
+                    order_params['is_paid'] = False    
+
                 current_orders.append(order_params)
             elif order.datetime < now:
                 past_orders.append(order_params)
@@ -268,4 +279,54 @@ def get_customers_orders(phonenumber):
         'past_orders': past_orders
     }
 
+    print(context)
+
     return context
+
+
+def make_payment(request, order_id):
+    order = Order.objects.get(id=order_id)
+    stripe.api_key = settings.STRIPE_API_KEY
+
+    amount =  int(order.procedure.price)*100
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency': 'rub',
+                'product_data': {
+                    'name': f'Вы платите за услугу "{order.procedure}", {order.procedure.price} рублей.',
+                },
+                'unit_amount': amount,
+            },
+            'quantity': 1,
+        }],
+        mode='payment',
+        metadata = {
+            'order_id': order_id
+        },
+        success_url=request.build_absolute_uri(reverse('successed_payment')),
+        cancel_url=request.build_absolute_uri(reverse('cancelled_payment')),
+    )
+
+    return redirect(session.url, code=303)
+
+
+def pay_success(request):
+    stripe.api_key = settings.STRIPE_API_KEY
+    stripe_sessions = stripe.checkout.Session.list(limit=3)
+    session = stripe_sessions['data'][0]
+    if session['payment_status'] == 'paid':
+        order_id = session['metadata']['order_id']
+        order = Order.objects.get(id=order_id)
+        payment, created = Payment.objects.get_or_create(
+            order=order,
+            value=order.procedure.price
+        )
+
+    return render(request, 'success.html')
+
+
+def cancelled(request):
+    return render(request, 'cancelled.html')

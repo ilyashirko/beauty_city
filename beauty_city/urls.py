@@ -28,6 +28,9 @@ urlpatterns = [
     path('service/', views.service, name='service'),
     path('admin_page/', views.admin_page, name='admin_page'),
     path('service_finally/', views.service_finally, name='service_finally'),
-    path('exit/', views.exit, name='exit')
+    path('exit/', views.exit, name='exit'),
+    path('payment/<int:order_id>', views.make_payment, name="make_payment"),
+    path('success/', views.pay_success, name='successed_payment'),
+    path('cancelled/', views.cancelled, name='cancelled_payment')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

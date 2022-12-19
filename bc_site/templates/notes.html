@@ -212,7 +212,11 @@
 												<div class="notes__main_number">Запись</div>
 												<div class="notes__main_address">{{ order.salon_address }}</div>
 											</div>
-											<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
+											{% if not order.is_paid %}
+												<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
+											{% else %}
+												<div class="notes__main_pay payid">ОПЛАЧЕНО</div>
+											{% endif %}
 										</div>
 										<div class="notes__main_block__main ">
 											<div class="notes__main_block__main_items">
@@ -240,8 +244,14 @@
 										<div class="notes__footer fic">
 											<a href="#" class="notes__footer_link rewiewPopupOpen">Оставить отзыв</a>
 											<a href="#" class="notes__footer_link tipsPopupOpen">Чаевые</a>
-											<button class="notes__footer_btn payPopupOpen">Оплатить</button>
-											<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
+											{% if not order.is_paid %}
+												<a href="{% url 'make_payment' order.id %}">
+													<button class="notes__footer_btn">Оплатить</button>
+												</a>
+												<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
+											{% else %}
+												<div class="notes__main_pay payid">ОПЛАЧЕНО</div>		
+											{% endif %}
 										</div>
 									</div>
 								</div>
