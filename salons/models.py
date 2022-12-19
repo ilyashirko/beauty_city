@@ -140,4 +140,4 @@ class MasterSchedule(models.Model):
     finish_at = models.TimeField('Заканчивает работу в', null=True)
 
     def __str__(self):
-        return f'{self.salon} ({self.week_day}): {self.open} - {self.close}'
+        return f'{self.salon} ({self.week_day}): {self.start_at} - {self.finish_at}'

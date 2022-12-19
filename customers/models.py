@@ -30,7 +30,7 @@ class Order(models.Model):
     )
     procedure = models.ForeignKey(
         'salons.Procedure',
-        verbose_name='Салон',
+        verbose_name='Процедура',
         related_name='orders',
         on_delete=models.PROTECT,
         blank=True
@@ -45,7 +45,9 @@ class Order(models.Model):
     datetime = models.DateTimeField(
         'Время записи'
     )
-
+    
+    def __str__(self):
+        return f'{self.customer} - {self.salon} ({self.datetime})'
 
 class Request(models.Model):
     customer = models.ForeignKey(
